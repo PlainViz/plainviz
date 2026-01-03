@@ -3,7 +3,7 @@
  * Parses PlainViz syntax into IR (Intermediate Representation)
  */
 
-import type { PlainVizIR, ParseResult, ParseError, ChartType } from './ir';
+import type { PlainVizIR, ParseResult, ParseError, ChartType } from './ir.js';
 
 const HEADER_KEYS = new Set([
   'type', 'title', 'subtitle', 'theme',

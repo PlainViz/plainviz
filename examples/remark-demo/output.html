@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PlainViz Remark Demo</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1e1e2e;
+      color: #cdd6f4;
+    }
+    h1, h2 { color: #cba6f7; }
+    .plainviz-chart {
+      margin: 20px 0;
+      padding: 20px;
+      background: #181825;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+<h1>PlainViz Remark Demo</h1>
+<p>This document demonstrates the remark-plainviz plugin.</p>
+<h2>Sales Report</h2>
+<div class="plainviz-chart"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" style="background-color: #1e1e2e;">
+  <text x="250" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#cdd6f4">Q1 Sales</text>
+  <line x1="60" y1="60" x2="60" y2="240" stroke="#313244" stroke-width="1"/>
+  <line x1="60" y1="240" x2="440" y2="240" stroke="#313244" stroke-width="1"/>
+  <line x1="60" y1="202.5" x2="440" y2="202.5" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="206.5" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">63</text>
+  <line x1="60" y1="165" x2="440" y2="165" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="169" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">125</text>
+  <line x1="60" y1="127.5" x2="440" y2="127.5" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="131.5" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">188</text>
+  <line x1="60" y1="90" x2="440" y2="90" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="94" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">250</text>
+  <rect x="85.33333333333334" y="168" width="76" height="72" rx="4" fill="#89b4fa"/>
+  <text x="123.33333333333334" y="160" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">120</text>
+  <text x="123.33333333333334" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">January</text>
+  <rect x="212.00000000000003" y="132" width="76" height="108" rx="4" fill="#a6e3a1"/>
+  <text x="250.00000000000003" y="124" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">180</text>
+  <text x="250.00000000000003" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">February</text>
+  <rect x="338.6666666666667" y="90" width="76" height="150" rx="4" fill="#f9e2af"/>
+  <text x="376.6666666666667" y="82" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">250</text>
+  <text x="376.6666666666667" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">March</text>
+</svg></div>
+<h2>Market Share</h2>
+<div class="plainviz-chart"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" style="background-color: #1e1e2e;">
+  <text x="250" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="#cdd6f4">Browser Market Share</text>
+  <line x1="60" y1="60" x2="60" y2="240" stroke="#313244" stroke-width="1"/>
+  <line x1="60" y1="240" x2="440" y2="240" stroke="#313244" stroke-width="1"/>
+  <line x1="60" y1="202.5" x2="440" y2="202.5" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="206.5" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">16</text>
+  <line x1="60" y1="165" x2="440" y2="165" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="169" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">33</text>
+  <line x1="60" y1="127.5" x2="440" y2="127.5" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="131.5" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">49</text>
+  <line x1="60" y1="90" x2="440" y2="90" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="52" y="94" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">65</text>
+  <rect x="79" y="90" width="57" height="150" rx="4" fill="#89b4fa"/>
+  <text x="107.5" y="82" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">65</text>
+  <text x="107.5" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">Chrome</text>
+  <rect x="174" y="196.15384615384616" width="57" height="43.84615384615385" rx="4" fill="#a6e3a1"/>
+  <text x="202.5" y="188.15384615384616" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">19</text>
+  <text x="202.5" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">Safari</text>
+  <rect x="269" y="221.53846153846155" width="57" height="18.461538461538463" rx="4" fill="#f9e2af"/>
+  <text x="297.5" y="213.53846153846155" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">8</text>
+  <text x="297.5" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">Firefox</text>
+  <rect x="364" y="228.46153846153845" width="57" height="11.538461538461538" rx="4" fill="#f38ba8"/>
+  <text x="392.5" y="220.46153846153845" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">5</text>
+  <text x="392.5" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">Edge</text>
+</svg></div>
+<h2>Conclusion</h2>
+<p>The charts above are rendered at build time from plain text.</p>
+
+</body>
+</html>

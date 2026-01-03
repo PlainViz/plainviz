@@ -12,5 +12,9 @@
   "devDependencies": {
     "tsx": "^4.19.0",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "remark": "^15.0.1",
+    "remark-html": "^16.0.1"
   }
 }
