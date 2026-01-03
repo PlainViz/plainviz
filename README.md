@@ -2,30 +2,56 @@
 
 PlainViz is a **plain-text-first data visualization language and toolkit**.
 
-It lets you describe charts and visual structures using readable text, and turn them into visual output programmatically.
+It lets you describe charts as readable text — and render them programmatically.
 
-> Status: **early stage**.
-> The language and APIs are evolving and may change.
+**Current focus:** bar charts
+**Status:** early stage (APIs and syntax may change)
 
 ---
 
-## What is PlainViz?
+## 15-Second Example (Bar Chart)
+
+```yaml
+Type: Bar
+Title: Monthly Sales
+
+Jan: 20
+Feb: 45
+Mar: 80
+Apr: 60
+```
+
+**Intent:**
+A bar chart whose structure, labels, and values are fully visible as plain text.
+
+**Output (planned):**
+SVG (reference renderer) → Canvas / others later
+
+---
+
+## What Is PlainViz?
 
 PlainViz explores a simple idea:
 
 > **Data visualizations should be writable, reviewable, and understandable as plain text.**
 
-Instead of configuring charts through large JSON objects or imperative code, PlainViz aims to provide:
+Instead of configuring charts through:
 
-- A **text-based notation** for charts and visual structures
-- A **declarative, readable syntax** suitable for version control
-- A **tooling layer** that can render or transform these descriptions
+* large JSON objects
+* imperative drawing code
+* opaque UI state
+
+PlainViz aims to provide:
+
+* a **text-based notation** for charts and visual structures
+* a **declarative, readable syntax** suitable for version control
+* a **tooling layer** that can render or transform these descriptions
 
 You can think of it as a step toward:
 
-- "Markdown-like" authoring for data visualization
-- A shared textual format for charts across tools
-- Visual intent that can be reviewed in code reviews
+* *Markdown-like authoring* for data visualization
+* a shared textual format for charts across tools
+* visual intent that can be reviewed in pull requests
 
 ---
 
@@ -33,26 +59,44 @@ You can think of it as a step toward:
 
 Plain text has some important properties:
 
-- It works well with **Git and diff**
-- It is easy to **read, write, and review**
-- It survives copy/paste, chat tools, and documentation
-- It makes **visual intent explicit**, not hidden in UI state
+* works naturally with Git and diff
+* easy to read, write, and review
+* survives copy/paste, chat tools, and documentation
+* makes visual intent explicit, not hidden in UI state
 
 PlainViz is an attempt to bring these properties to data visualization.
 
 ---
 
+## Why Start with Bar Charts?
+
+Bar charts are intentionally chosen as the first focus because:
+
+* they are structurally simple
+* they expose core design questions (axes, scale, labels, values)
+* they are common in product, business, and technical contexts
+
+Starting with bar charts helps keep:
+
+* the language surface area small
+* the mental model clear
+* experimentation focused
+
+Other chart types are **out of scope for now**.
+
+---
+
 ## Current Status
 
-This project is in its **very early stage**.
+This project is in a very early stage.
 
-Right now:
+At the moment:
 
-- The language syntax is still being explored
-- There is no stable renderer or runtime API
-- The npm package is published to reserve the name and establish the project entry point
+* the language syntax is still being explored
+* there is no stable renderer or runtime API
+* the npm package exists to reserve the name and establish the entry point
 
-If you install the package today, you should expect **placeholders**, not a finished tool.
+If you install the package today, expect **placeholders**, not a finished tool.
 
 ---
 
@@ -62,28 +106,32 @@ If you install the package today, you should expect **placeholders**, not a fini
 npm install plainviz
 ```
 
-> Note: Installing the package today is mainly for early adopters and experimentation.
+> Note: Installation is currently for early adopters and experimentation only.
 
 ---
 
-## Roadmap (high level)
+## Roadmap (High Level)
 
-This is a rough direction, not a promise:
+This is direction, not a promise:
 
-- Define a minimal, expressive core syntax
-- Build a reference parser
-- Experiment with one or two render targets (e.g. SVG / Canvas)
-- Document the language with examples
+* define a minimal, expressive core syntax (bar charts first)
+* build a reference parser
+* implement a reference SVG renderer
+* document the language with concrete examples
 
-The goal is to keep the surface area small and the intent clear.
+The goal is to keep:
+
+* the surface area small
+* the intent explicit
+* the abstraction honest
 
 ---
 
-## Repository & Docs
+## Repository & Links
 
-- **npm**: https://www.npmjs.com/package/plainviz
-- **GitHub**: https://github.com/PlainViz/plainviz
-- **Website / Docs**: https://plainviz.com
+* npm: [https://www.npmjs.com/package/plainviz](https://www.npmjs.com/package/plainviz)
+* GitHub: [https://github.com/PlainViz/plainviz](https://github.com/PlainViz/plainviz)
+* Website / Docs: [https://plainviz.com](https://plainviz.com)
 
 ---
 
@@ -91,10 +139,10 @@ The goal is to keep the surface area small and the intent clear.
 
 The project is not yet ready for broad contribution, but:
 
-- Issues and conceptual discussions are welcome
-- Feedback on syntax and mental models is especially useful
+* issues and conceptual discussions are welcome
+* feedback on syntax and mental models is especially useful
 
-More contribution guidelines will be added as the project stabilizes.
+Contribution guidelines will be added as the project stabilizes.
 
 ---
 
