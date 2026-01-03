@@ -1,6 +1,6 @@
 {
   "name": "remark-plainviz",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Remark plugin to render PlainViz code blocks as SVG charts",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,8 +20,8 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@plainviz/core": "workspace:*",
-    "@plainviz/render-svg": "workspace:*",
+    "@plainviz/core": "^0.1.0",
+    "@plainviz/render-svg": "^0.1.0",
     "unist-util-visit": "^5.0.0"
   },
   "peerDependencies": {
