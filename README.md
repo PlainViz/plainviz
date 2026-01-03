@@ -9,9 +9,9 @@ It lets you describe charts as readable text — and render them programmaticall
 
 ---
 
-## 15-Second Example (Bar Chart)
+## 15-Second Example
 
-```PlainViz
+```plainviz
 Type: Bar
 Title: Monthly Sales
 
@@ -27,120 +27,141 @@ Apr: 60
 
 ---
 
-## What Is PlainViz?
+## Installation
 
-PlainViz explores a simple idea:
+```bash
+# Core packages
+npm install @plainviz/core @plainviz/render-svg
 
-> **Data visualizations should be writable, reviewable, and understandable as plain text.**
+# For Markdown/Remark integration
+npm install remark-plainviz
+```
 
-Instead of configuring charts through:
+---
 
-* large JSON objects
-* imperative drawing code
-* opaque UI state
+## Usage
 
-PlainViz aims to provide:
+### JavaScript / TypeScript
 
-* a **text-based notation** for charts and visual structures
-* a **declarative, readable syntax** suitable for version control
-* a **tooling layer** that can render or transform these descriptions
+```ts
+import { parse } from '@plainviz/core';
+import { render } from '@plainviz/render-svg';
 
-You can think of it as a step toward:
+const input = `
+Type: Bar
+Title: Sales
 
-* *Markdown-like authoring* for data visualization
-* a shared textual format for charts across tools
-* visual intent that can be reviewed in pull requests
+Q1: 100
+Q2: 200
+Q3: 150
+`;
+
+const result = parse(input);
+
+if (result.ok) {
+  const svg = render(result.ir);
+  console.log(svg); // SVG string
+}
+```
+
+### CLI
+
+```bash
+# Clone the repo, then:
+node --import tsx scripts/render-svg.mjs examples/01-basic.pv > chart.svg
+```
+
+### Markdown (Remark Plugin)
+
+```js
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
+import remarkPlainViz from 'remark-plainviz';
+
+const markdown = `
+# Report
+
+\`\`\`plainviz
+Type: Bar
+Title: Q1 Results
+
+Product A: 500
+Product B: 750
+\`\`\`
+`;
+
+const result = await remark()
+  .use(remarkPlainViz)
+  .use(remarkHtml)
+  .process(markdown);
+
+// plainviz code blocks are replaced with SVG charts
+```
+
+---
+
+## Syntax
+
+```plainviz
+Type: Bar              # Chart type (bar, line, pie, area)
+Title: "Chart Title"   # Optional title
+Subtitle: "Subtitle"   # Optional subtitle
+
+# Data (label: value)
+Product A: 500
+Product B: $1,200      # $ and commas are auto-cleaned
+Product C: 45%         # % is auto-cleaned
+```
+
+---
+
+## Packages
+
+| Package | Description |
+|---------|-------------|
+| [`@plainviz/core`](https://www.npmjs.com/package/@plainviz/core) | Parser and IR types |
+| [`@plainviz/render-svg`](https://www.npmjs.com/package/@plainviz/render-svg) | SVG renderer |
+| [`remark-plainviz`](https://www.npmjs.com/package/remark-plainviz) | Remark plugin for Markdown |
+
+---
+
+## Project Structure
+
+```
+plainviz/
+├── packages/
+│   ├── core/           # @plainviz/core
+│   ├── render-svg/     # @plainviz/render-svg
+│   └── remark-plainviz/
+├── apps/
+│   └── playground/     # Web playground (Vite + React)
+├── examples/           # .pv example files
+└── scripts/            # CLI tools
+```
 
 ---
 
 ## Why Plain Text?
 
-Plain text has some important properties:
-
-* works naturally with Git and diff
-* easy to read, write, and review
-* survives copy/paste, chat tools, and documentation
-* makes visual intent explicit, not hidden in UI state
-
-PlainViz is an attempt to bring these properties to data visualization.
+* Works naturally with **Git and diff**
+* Easy to **read, write, and review**
+* Survives copy/paste, chat tools, and documentation
+* Makes **visual intent explicit**, not hidden in UI state
 
 ---
 
-## Why Start with Bar Charts?
+## Links
 
-Bar charts are intentionally chosen as the first focus because:
-
-* they are structurally simple
-* they expose core design questions (axes, scale, labels, values)
-* they are common in product, business, and technical contexts
-
-Starting with bar charts helps keep:
-
-* the language surface area small
-* the mental model clear
-* experimentation focused
-
-Other chart types are **out of scope for now**.
-
----
-
-## Current Status
-
-This project is in a very early stage.
-
-At the moment:
-
-* the language syntax is still being explored
-* there is no stable renderer or runtime API
-* the npm package exists to reserve the name and establish the entry point
-
-If you install the package today, expect **placeholders**, not a finished tool.
-
----
-
-## Installation
-
-```bash
-npm install plainviz
-```
-
-> Note: Installation is currently for early adopters and experimentation only.
-
----
-
-## Roadmap (High Level)
-
-This is direction, not a promise:
-
-* define a minimal, expressive core syntax (bar charts first)
-* build a reference parser
-* implement a reference SVG renderer
-* document the language with concrete examples
-
-The goal is to keep:
-
-* the surface area small
-* the intent explicit
-* the abstraction honest
-
----
-
-## Repository & Links
-
-* npm: [https://www.npmjs.com/package/plainviz](https://www.npmjs.com/package/plainviz)
-* GitHub: [https://github.com/PlainViz/plainviz](https://github.com/PlainViz/plainviz)
-* Website / Docs: [https://plainviz.com](https://plainviz.com)
+* npm: [@plainviz/core](https://www.npmjs.com/package/@plainviz/core)
+* GitHub: [github.com/PlainViz/plainviz](https://github.com/PlainViz/plainviz)
+* Website: [plainviz.com](https://plainviz.com)
 
 ---
 
 ## Contributing
 
-The project is not yet ready for broad contribution, but:
-
-* issues and conceptual discussions are welcome
-* feedback on syntax and mental models is especially useful
-
-Contribution guidelines will be added as the project stabilizes.
+* Issues and conceptual discussions are welcome
+* Feedback on syntax and mental models is especially useful
 
 ---
 
