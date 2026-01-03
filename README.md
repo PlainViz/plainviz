@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# PlainViz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PlainViz is a **plain-text-first data visualization language and toolkit**.
 
-Currently, two official plugins are available:
+It lets you describe charts and visual structures using readable text, and turn them into visual output programmatically.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> Status: **early stage**.
+> The language and APIs are evolving and may change.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What is PlainViz?
 
-## Expanding the ESLint configuration
+PlainViz explores a simple idea:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+> **Data visualizations should be writable, reviewable, and understandable as plain text.**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Instead of configuring charts through large JSON objects or imperative code, PlainViz aims to provide:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- A **text-based notation** for charts and visual structures
+- A **declarative, readable syntax** suitable for version control
+- A **tooling layer** that can render or transform these descriptions
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+You can think of it as a step toward:
+
+- "Markdown-like" authoring for data visualization
+- A shared textual format for charts across tools
+- Visual intent that can be reviewed in code reviews
+
+---
+
+## Why Plain Text?
+
+Plain text has some important properties:
+
+- It works well with **Git and diff**
+- It is easy to **read, write, and review**
+- It survives copy/paste, chat tools, and documentation
+- It makes **visual intent explicit**, not hidden in UI state
+
+PlainViz is an attempt to bring these properties to data visualization.
+
+---
+
+## Current Status
+
+This project is in its **very early stage**.
+
+Right now:
+
+- The language syntax is still being explored
+- There is no stable renderer or runtime API
+- The npm package is published to reserve the name and establish the project entry point
+
+If you install the package today, you should expect **placeholders**, not a finished tool.
+
+---
+
+## Installation
+
+```bash
+npm install plainviz
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> Note: Installing the package today is mainly for early adopters and experimentation.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Roadmap (high level)
+
+This is a rough direction, not a promise:
+
+- Define a minimal, expressive core syntax
+- Build a reference parser
+- Experiment with one or two render targets (e.g. SVG / Canvas)
+- Document the language with examples
+
+The goal is to keep the surface area small and the intent clear.
+
+---
+
+## Repository & Docs
+
+- **npm**: https://www.npmjs.com/package/plainviz
+- **GitHub**: https://github.com/PlainViz/plainviz
+- **Website / Docs**: https://plainviz.com
+
+---
+
+## Contributing
+
+The project is not yet ready for broad contribution, but:
+
+- Issues and conceptual discussions are welcome
+- Feedback on syntax and mental models is especially useful
+
+More contribution guidelines will be added as the project stabilizes.
+
+---
+
+## License
+
+MIT
