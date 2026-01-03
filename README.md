@@ -11,7 +11,7 @@ It lets you describe charts as readable text — and render them programmaticall
 
 ## 15-Second Example (Bar Chart)
 
-```yaml
+```PlainViz
 Type: Bar
 Title: Monthly Sales
 
@@ -21,11 +21,9 @@ Mar: 80
 Apr: 60
 ```
 
-**Intent:**
-A bar chart whose structure, labels, and values are fully visible as plain text.
+**Renders to:**
 
-**Output (planned):**
-SVG (reference renderer) → Canvas / others later
+![Monthly Sales Bar Chart](./assets/example-bar.svg)
 
 ---
 

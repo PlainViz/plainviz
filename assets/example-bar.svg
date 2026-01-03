@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" style="background-color: #1e1e2e;">
+  <!-- Title -->
+  <text x="250" y="30" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" font-weight="bold" fill="#cdd6f4">Monthly Sales</text>
+
+  <!-- Y Axis -->
+  <line x1="60" y1="50" x2="60" y2="250" stroke="#313244" stroke-width="1"/>
+  <text x="50" y="255" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">0</text>
+  <text x="50" y="205" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">25</text>
+  <text x="50" y="155" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">50</text>
+  <text x="50" y="105" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">75</text>
+  <text x="50" y="55" text-anchor="end" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">100</text>
+
+  <!-- Grid lines -->
+  <line x1="60" y1="200" x2="460" y2="200" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="60" y1="150" x2="460" y2="150" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="60" y1="100" x2="460" y2="100" stroke="#313244" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- X Axis -->
+  <line x1="60" y1="250" x2="460" y2="250" stroke="#313244" stroke-width="1"/>
+
+  <!-- Bars: Jan=20, Feb=45, Mar=80, Apr=60 -->
+  <!-- Bar heights: value * 2 (since 100 = 200px height) -->
+  <!-- Jan: 20 -> height 40px, y = 250-40 = 210 -->
+  <rect x="90" y="210" width="60" height="40" rx="4" fill="#89b4fa"/>
+  <text x="120" y="275" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">Jan</text>
+  <text x="120" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">20</text>
+
+  <!-- Feb: 45 -> height 90px, y = 250-90 = 160 -->
+  <rect x="190" y="160" width="60" height="90" rx="4" fill="#a6e3a1"/>
+  <text x="220" y="275" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">Feb</text>
+  <text x="220" y="150" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">45</text>
+
+  <!-- Mar: 80 -> height 160px, y = 250-160 = 90 -->
+  <rect x="290" y="90" width="60" height="160" rx="4" fill="#f9e2af"/>
+  <text x="320" y="275" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">Mar</text>
+  <text x="320" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">80</text>
+
+  <!-- Apr: 60 -> height 120px, y = 250-120 = 130 -->
+  <rect x="390" y="130" width="60" height="120" rx="4" fill="#f38ba8"/>
+  <text x="420" y="275" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6c7086">Apr</text>
+  <text x="420" y="120" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#cdd6f4">60</text>
+</svg>
