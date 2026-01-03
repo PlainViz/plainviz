@@ -1,12 +1,32 @@
 import { useState, useMemo } from 'react';
 import Editor from '@monaco-editor/react';
-import { parse, DEFAULT_EXAMPLE } from './lib/parser';
+import { parse } from '@plainviz/core';
+import { render } from '@plainviz/render-svg';
 import { ChartRenderer } from './components/ChartRenderer';
+
+const DEFAULT_EXAMPLE = `Type: Bar
+Title: Q1 Revenue
+
+Product A: 500
+Product B: 750
+Product C: 300
+Product D: 420`;
 
 function App() {
   const [code, setCode] = useState(DEFAULT_EXAMPLE);
 
   const parseResult = useMemo(() => parse(code), [code]);
+
+  const svgString = useMemo(() => {
+    if (parseResult.ok) {
+      try {
+        return render(parseResult.ir);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }, [parseResult]);
 
   return (
     <div className="h-full flex flex-col bg-[#1e1e2e]">
@@ -19,18 +39,18 @@ function App() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              const svg = document.querySelector('.recharts-wrapper svg');
-              if (svg) {
-                const svgData = new XMLSerializer().serializeToString(svg);
-                const blob = new Blob([svgData], { type: 'image/svg+xml' });
+              if (svgString) {
+                const blob = new Blob([svgString], { type: 'image/svg+xml' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'chart.svg';
                 a.click();
+                URL.revokeObjectURL(url);
               }
             }}
-            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors"
+            disabled={!svgString}
+            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors disabled:opacity-50"
           >
             Export SVG
           </button>
@@ -87,7 +107,10 @@ function App() {
       {/* Status Bar */}
       <footer className="h-6 flex items-center justify-between px-3 border-t border-[#313244] bg-[#181825] text-xs text-[#6c7086]">
         <span>
-          Type: {parseResult.config.type} | Data points: {parseResult.data.length}
+          {parseResult.ok
+            ? `Type: ${parseResult.ir.type} | Data points: ${parseResult.ir.labels.length}`
+            : `Errors: ${parseResult.errors.length}`
+          }
         </span>
         <span>plainviz.com</span>
       </footer>

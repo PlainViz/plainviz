@@ -1,0 +1,35 @@
+{
+  "name": "@plainviz/render-svg",
+  "version": "0.1.0",
+  "description": "PlainViz SVG renderer",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@plainviz/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "keywords": [
+    "plainviz",
+    "svg",
+    "render",
+    "chart"
+  ],
+  "license": "MIT"
+}

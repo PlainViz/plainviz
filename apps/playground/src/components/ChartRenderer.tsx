@@ -15,7 +15,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
-import type { ParseResult } from '../lib/parser';
+import type { ParseResult } from '@plainviz/core';
 
 // Catppuccin Mocha palette
 const COLORS = [
@@ -34,9 +34,24 @@ interface ChartRendererProps {
 }
 
 export function ChartRenderer({ result }: ChartRendererProps) {
-  const { config, data, error } = result;
+  if (!result.ok) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-500">
+        <div className="text-center">
+          <p className="text-lg text-red-400">Parse Errors:</p>
+          <ul className="text-sm mt-2 text-gray-400">
+            {result.errors.map((err, i) => (
+              <li key={i}>Line {err.line}: {err.message}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  }
 
-  if (error || data.length === 0) {
+  const { ir } = result;
+
+  if (ir.labels.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
         <div className="text-center">
@@ -49,13 +64,19 @@ export function ChartRenderer({ result }: ChartRendererProps) {
     );
   }
 
+  // Convert IR to Recharts data format
+  const data = ir.labels.map((label, i) => ({
+    name: label,
+    value: ir.values[i],
+  }));
+
   const commonProps = {
     data,
     margin: { top: 20, right: 30, left: 20, bottom: 20 },
   };
 
   const renderChart = () => {
-    switch (config.type) {
+    switch (ir.type) {
       case 'line':
         return (
           <LineChart {...commonProps}>
@@ -165,14 +186,14 @@ export function ChartRenderer({ result }: ChartRendererProps) {
 
   return (
     <div className="h-full flex flex-col">
-      {config.title && (
+      {ir.title && (
         <h2 className="text-xl font-bold text-center mb-2 text-gray-200">
-          {config.title}
+          {ir.title}
         </h2>
       )}
-      {config.subtitle && (
+      {ir.subtitle && (
         <p className="text-sm text-center mb-4 text-gray-400">
-          {config.subtitle}
+          {ir.subtitle}
         </p>
       )}
       <div className="flex-1">
