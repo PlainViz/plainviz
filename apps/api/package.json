@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "@plainviz/core": "^0.2.0",
-    "@plainviz/render-svg": "^0.2.0"
+    "@plainviz/render-svg": "^0.2.0",
+    "@vercel/node": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "@vercel/node": "^5.5.16",
     "typescript": "^5.7.2",
     "vercel": "^39.0.0"
   }
