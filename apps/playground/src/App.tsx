@@ -146,7 +146,7 @@ function App() {
           </button>
           {/* Docs Link */}
           <a
-            href="https://github.com/nicekate/plainviz/blob/main/docs/getting-started.md"
+            href="https://github.com/plainviz/plainviz/blob/main/docs/getting-started.md"
             target="_blank"
             rel="noopener noreferrer"
             className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors"

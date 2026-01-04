@@ -92,7 +92,7 @@ if (result.ok) {
 - Website: [plainviz.com](https://plainviz.com)
 - API: [api.plainviz.com](https://api.plainviz.com/api)
 - npm: [@plainviz/core](https://www.npmjs.com/package/@plainviz/core)
-- GitHub: [github.com/nicekate/plainviz](https://github.com/nicekate/plainviz)
+- GitHub: [github.com/plainviz/plainviz](https://github.com/plainviz/plainviz)
 
 ## Contributing
 
