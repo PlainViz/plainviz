@@ -4,7 +4,7 @@ PlainViz is a **plain-text-first data visualization language and toolkit**.
 
 It lets you describe charts as readable text — and render them programmatically.
 
-**Current focus:** bar charts
+**Supports:** Bar, Line, Pie, Area, Donut charts — with multi-series comparison
 **Status:** early stage (APIs and syntax may change)
 
 ---
@@ -24,6 +24,33 @@ Apr: 60
 **Renders to:**
 
 ![Monthly Sales Bar Chart](./assets/example-bar.svg)
+
+---
+
+## Multi-Series Comparison
+
+Compare multiple data series with a simple comma-separated syntax:
+
+```plainviz
+Type: Bar
+Title: Revenue Comparison
+Legend: Alibaba, Tencent
+
+Revenue: 100, 80
+Profit: 30, 25
+Growth: 15, 12
+```
+
+```plainviz
+Type: Line
+Title: Quarterly Trends
+Legend: 2023, 2024
+
+Q1: 100, 120
+Q2: 110, 140
+Q3: 130, 160
+Q4: 150, 180
+```
 
 ---
 
@@ -102,8 +129,10 @@ const result = await remark()
 
 ## Syntax
 
+### Single Series
+
 ```plainviz
-Type: Bar              # Chart type (bar, line, pie, area)
+Type: Bar              # Chart type: bar, line, pie, area, donut
 Title: "Chart Title"   # Optional title
 Subtitle: "Subtitle"   # Optional subtitle
 
@@ -112,6 +141,23 @@ Product A: 500
 Product B: $1,200      # $ and commas are auto-cleaned
 Product C: 45%         # % is auto-cleaned
 ```
+
+### Multi-Series
+
+```plainviz
+Type: Bar
+Title: Company Comparison
+Legend: Company A, Company B    # Define series names
+
+Revenue: 100, 80                # Values separated by comma
+Profit: 30, 25
+Growth: 15%, 12%
+```
+
+**Features:**
+- `Legend:` defines series names (defaults to "Series 1, Series 2" if omitted)
+- Supports both English `,` and Chinese `，` commas
+- Number formatting preserved (`$1,200` won't be split)
 
 ---
 
