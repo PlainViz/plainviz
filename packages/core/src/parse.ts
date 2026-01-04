@@ -97,7 +97,7 @@ export function parse(input: string): ParseResult {
 
       switch (keyLower) {
         case 'type':
-          const validTypes = ['bar', 'line', 'pie', 'area'];
+          const validTypes = ['bar', 'line', 'pie', 'area', 'donut'];
           const typeLower = value.toLowerCase();
           if (validTypes.includes(typeLower)) {
             type = typeLower as ChartType;

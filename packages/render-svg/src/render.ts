@@ -222,6 +222,69 @@ export function renderPieChart(ir: PlainVizIR, opts: RenderOptions = {}): string
   return lines.join('\n');
 }
 
+export function renderDonutChart(ir: PlainVizIR, opts: RenderOptions = {}): string {
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const { width, height, colors, backgroundColor, textColor } = options;
+
+  const centerX = width / 2;
+  const centerY = height / 2 + 10;
+  const outerRadius = Math.min(width, height) / 2 - 60;
+  const innerRadius = outerRadius * 0.6; // Donut hole
+  const total = ir.values.reduce((a, b) => a + b, 0);
+
+  const lines: string[] = [];
+
+  // SVG header
+  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="background-color: ${backgroundColor};">`);
+
+  // Title
+  if (ir.title) {
+    lines.push(`  <text x="${width / 2}" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="${textColor}">${escapeXml(ir.title)}</text>`);
+  }
+
+  // Draw donut slices
+  let currentAngle = -Math.PI / 2; // Start from top
+
+  ir.values.forEach((value, i) => {
+    const sliceAngle = (value / total) * 2 * Math.PI;
+    const endAngle = currentAngle + sliceAngle;
+
+    // Outer arc points
+    const ox1 = centerX + outerRadius * Math.cos(currentAngle);
+    const oy1 = centerY + outerRadius * Math.sin(currentAngle);
+    const ox2 = centerX + outerRadius * Math.cos(endAngle);
+    const oy2 = centerY + outerRadius * Math.sin(endAngle);
+
+    // Inner arc points
+    const ix1 = centerX + innerRadius * Math.cos(currentAngle);
+    const iy1 = centerY + innerRadius * Math.sin(currentAngle);
+    const ix2 = centerX + innerRadius * Math.cos(endAngle);
+    const iy2 = centerY + innerRadius * Math.sin(endAngle);
+
+    const largeArc = sliceAngle > Math.PI ? 1 : 0;
+    const color = colors[i % colors.length];
+
+    // Donut slice path: outer arc -> line to inner -> inner arc (reverse) -> line back
+    const pathD = `M ${ox1} ${oy1} A ${outerRadius} ${outerRadius} 0 ${largeArc} 1 ${ox2} ${oy2} L ${ix2} ${iy2} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${ix1} ${iy1} Z`;
+    lines.push(`  <path d="${pathD}" fill="${color}" stroke="${backgroundColor}" stroke-width="2"/>`);
+
+    // Label position (middle of slice, outside)
+    const labelAngle = currentAngle + sliceAngle / 2;
+    const labelRadius = outerRadius + 25;
+    const labelX = centerX + labelRadius * Math.cos(labelAngle);
+    const labelY = centerY + labelRadius * Math.sin(labelAngle);
+    const percent = Math.round((value / total) * 100);
+
+    lines.push(`  <text x="${labelX}" y="${labelY}" text-anchor="middle" dominant-baseline="middle" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${escapeXml(ir.labels[i])}: ${percent}%</text>`);
+
+    currentAngle = endAngle;
+  });
+
+  lines.push('</svg>');
+
+  return lines.join('\n');
+}
+
 export function renderAreaChart(ir: PlainVizIR, opts: RenderOptions = {}): string {
   const options = { ...DEFAULT_OPTIONS, ...opts };
   const { width, height, padding, colors, backgroundColor, textColor, gridColor } = options;
@@ -296,6 +359,8 @@ export function render(ir: PlainVizIR, opts: RenderOptions = {}): string {
       return renderLineChart(ir, opts);
     case 'pie':
       return renderPieChart(ir, opts);
+    case 'donut':
+      return renderDonutChart(ir, opts);
     case 'area':
       return renderAreaChart(ir, opts);
     default:

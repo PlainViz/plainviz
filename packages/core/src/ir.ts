@@ -4,7 +4,7 @@
  * All renderers consume this format.
  */
 
-export type ChartType = 'bar' | 'line' | 'pie' | 'area';
+export type ChartType = 'bar' | 'line' | 'pie' | 'area' | 'donut';
 
 export interface PlainVizIR {
   type: ChartType;
