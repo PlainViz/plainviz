@@ -155,7 +155,7 @@ function App() {
           </a>
           {/* GitHub Link */}
           <a
-            href="https://github.com/nicekate/plainviz"
+            href="https://github.com/plainviz/plainviz"
             target="_blank"
             rel="noopener noreferrer"
             className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors flex items-center gap-1"

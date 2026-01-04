@@ -252,7 +252,7 @@ plainviz/
 ## Links
 
 * npm: [@plainviz/core](https://www.npmjs.com/package/@plainviz/core)
-* GitHub: [github.com/nicekate/plainviz](https://github.com/nicekate/plainviz)
+* GitHub: [github.com/nicekate/plainviz](https://github.com/plainviz/plainviz)
 * Website: [plainviz.com](https://plainviz.com)
 * API: [api.plainviz.com](https://api.plainviz.com/api)
 
