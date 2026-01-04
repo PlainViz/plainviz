@@ -16,6 +16,6 @@ export default function handler(req: any, res: any) {
         example: '/api/render?code=Type:Bar%0AApples:50%0AOranges:30',
       },
     },
-    docs: 'https://github.com/nicekate/plainviz',
+    docs: 'https://plainviz.com',
   });
 }

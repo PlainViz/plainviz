@@ -171,6 +171,58 @@ Growth: 15%, 12%
 
 ---
 
+## Cloud API
+
+PlainViz provides a free cloud API for rendering charts without installing any packages.
+
+### Endpoint
+
+```
+GET https://api.plainviz.com/api/render
+```
+
+### Parameters
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `code` | Yes | - | PlainViz code (URL encoded) |
+| `width` | No | 500 | Chart width in pixels |
+| `height` | No | 300 | Chart height in pixels |
+| `theme` | No | dark | Color theme: `dark` or `light` |
+| `format` | No | svg | Response format: `svg` or `json` |
+
+### Examples
+
+**Simple bar chart:**
+```
+https://api.plainviz.com/api/render?code=Type:Bar%0AApples:50%0AOranges:30
+```
+
+**With options:**
+```
+https://api.plainviz.com/api/render?code=Type:Pie%0AA:40%0AB:60&theme=light&width=400
+```
+
+**Embed in HTML:**
+```html
+<img src="https://api.plainviz.com/api/render?code=Type:Bar%0ASales:100%0ACosts:60" alt="Chart" />
+```
+
+**Use in Markdown:**
+```markdown
+![Chart](https://api.plainviz.com/api/render?code=Type:Bar%0AQ1:100%0AQ2:150)
+```
+
+### API Info
+
+```
+GET https://api.plainviz.com/api
+```
+
+Returns API documentation and available endpoints.
+
+---
+
 ## Project Structure
 
 ```
@@ -180,7 +232,8 @@ plainviz/
 │   ├── render-svg/     # @plainviz/render-svg
 │   └── remark-plainviz/
 ├── apps/
-│   └── playground/     # Web playground (Vite + React)
+│   ├── playground/     # Web playground (Vite + React)
+│   └── api/            # Cloud API (Vercel)
 ├── examples/           # .pv example files
 └── scripts/            # CLI tools
 ```
@@ -199,8 +252,9 @@ plainviz/
 ## Links
 
 * npm: [@plainviz/core](https://www.npmjs.com/package/@plainviz/core)
-* GitHub: [github.com/PlainViz/plainviz](https://github.com/PlainViz/plainviz)
+* GitHub: [github.com/nicekate/plainviz](https://github.com/nicekate/plainviz)
 * Website: [plainviz.com](https://plainviz.com)
+* API: [api.plainviz.com](https://api.plainviz.com/api)
 
 ---
 
