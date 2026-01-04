@@ -83,11 +83,20 @@ export function ChartRenderer({ result }: ChartRendererProps) {
     );
   }
 
+  const isMultiSeries = ir.series && ir.series.length > 1;
+
   // Convert IR to Recharts data format
-  const data = ir.labels.map((label, i) => ({
-    name: label,
-    value: ir.values[i],
-  }));
+  const data = ir.labels.map((label, i) => {
+    const point: Record<string, string | number> = { name: label };
+    if (isMultiSeries) {
+      ir.series!.forEach((series) => {
+        point[series.name] = series.values[i] ?? 0;
+      });
+    } else {
+      point.value = ir.values[i];
+    }
+    return point;
+  });
 
   const commonProps = {
     data,
@@ -110,13 +119,26 @@ export function ChartRenderer({ result }: ChartRendererProps) {
               }}
             />
             <Legend />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke={COLORS[0]}
-              strokeWidth={2}
-              dot={{ fill: COLORS[0] }}
-            />
+            {isMultiSeries ? (
+              ir.series!.map((series, i) => (
+                <Line
+                  key={series.name}
+                  type="monotone"
+                  dataKey={series.name}
+                  stroke={series.color || COLORS[i % COLORS.length]}
+                  strokeWidth={2}
+                  dot={{ fill: series.color || COLORS[i % COLORS.length] }}
+                />
+              ))
+            ) : (
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke={COLORS[0]}
+                strokeWidth={2}
+                dot={{ fill: COLORS[0] }}
+              />
+            )}
           </LineChart>
         );
 
@@ -133,13 +155,27 @@ export function ChartRenderer({ result }: ChartRendererProps) {
                 borderRadius: '8px',
               }}
             />
-            <Area
-              type="monotone"
-              dataKey="value"
-              stroke={COLORS[0]}
-              fill={COLORS[0]}
-              fillOpacity={0.3}
-            />
+            <Legend />
+            {isMultiSeries ? (
+              ir.series!.map((series, i) => (
+                <Area
+                  key={series.name}
+                  type="monotone"
+                  dataKey={series.name}
+                  stroke={series.color || COLORS[i % COLORS.length]}
+                  fill={series.color || COLORS[i % COLORS.length]}
+                  fillOpacity={0.3}
+                />
+              ))
+            ) : (
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke={COLORS[0]}
+                fill={COLORS[0]}
+                fillOpacity={0.3}
+              />
+            )}
           </AreaChart>
         );
 
@@ -223,14 +259,25 @@ export function ChartRenderer({ result }: ChartRendererProps) {
               }}
             />
             <Legend />
-            <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-              {data.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+            {isMultiSeries ? (
+              ir.series!.map((series, i) => (
+                <Bar
+                  key={series.name}
+                  dataKey={series.name}
+                  fill={series.color || COLORS[i % COLORS.length]}
+                  radius={[4, 4, 0, 0]}
                 />
-              ))}
-            </Bar>
+              ))
+            ) : (
+              <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                {data.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Bar>
+            )}
           </BarChart>
         );
     }

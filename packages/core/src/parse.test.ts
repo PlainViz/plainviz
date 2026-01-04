@@ -166,4 +166,61 @@ A: 10
       }
     });
   });
+
+  describe('multi-series parsing', () => {
+    it('parses comma-separated values as multi-series', () => {
+      const result = parse(`
+Type: Bar
+Legend: 阿里, 腾讯
+营收: 100, 80
+利润: 30, 25
+`);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.ir.labels).toEqual(['营收', '利润']);
+        expect(result.ir.series).toBeDefined();
+        expect(result.ir.series?.length).toBe(2);
+        expect(result.ir.series?.[0].name).toBe('阿里');
+        expect(result.ir.series?.[0].values).toEqual([100, 30]);
+        expect(result.ir.series?.[1].name).toBe('腾讯');
+        expect(result.ir.series?.[1].values).toEqual([80, 25]);
+      }
+    });
+
+    it('uses default series names when Legend not provided', () => {
+      const result = parse(`
+Type: Bar
+A: 10, 20
+B: 30, 40
+`);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.ir.series?.[0].name).toBe('Series 1');
+        expect(result.ir.series?.[1].name).toBe('Series 2');
+      }
+    });
+
+    it('supports Chinese commas', () => {
+      const result = parse(`
+Type: Bar
+A: 100，200
+`);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.ir.series?.length).toBe(2);
+      }
+    });
+
+    it('preserves number formatting with commas', () => {
+      const result = parse(`
+Type: Bar
+Sales: $1,200
+`);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.ir.values).toEqual([1200]);
+        expect(result.ir.series).toBeUndefined();
+      }
+    });
+  });
 });

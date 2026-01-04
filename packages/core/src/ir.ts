@@ -6,16 +6,24 @@
 
 export type ChartType = 'bar' | 'line' | 'pie' | 'area' | 'donut';
 
+export interface DataSeries {
+  name: string;
+  values: number[];
+  color?: string;
+}
+
 export interface PlainVizIR {
   type: ChartType;
   title?: string;
   subtitle?: string;
   labels: string[];
-  values: number[];
+  values: number[];           // 单系列数据（向后兼容）
+  series?: DataSeries[];      // 多系列数据
   meta?: {
     xAxis?: string;
     yAxis?: string;
     theme?: string;
+    colors?: string[];        // 自定义颜色
   };
 }
 

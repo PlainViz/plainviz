@@ -4,4 +4,5 @@ export type {
   ParseResult,
   ParseError,
   ChartType,
+  DataSeries,
 } from './ir.js';

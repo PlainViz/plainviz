@@ -44,14 +44,28 @@ function escapeXml(str: string): string {
 
 export function renderBarChart(ir: PlainVizIR, opts: RenderOptions = {}): string {
   const options = { ...DEFAULT_OPTIONS, ...opts };
-  const { width, height, padding, colors, backgroundColor, textColor, gridColor } = options;
+  const { width, height, padding, backgroundColor, textColor, gridColor } = options;
+  const colors = ir.meta?.colors || options.colors;
+
+  const isMultiSeries = ir.series && ir.series.length > 1;
+  const seriesCount = isMultiSeries ? ir.series!.length : 1;
+  const legendHeight = isMultiSeries ? 25 : 0;
 
   const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2 - 30; // Reserve space for title
-  const maxValue = Math.max(...ir.values);
-  const barCount = ir.values.length;
-  const barWidth = (chartWidth / barCount) * 0.6;
-  const barGap = (chartWidth / barCount) * 0.4;
+  const chartHeight = height - padding * 2 - 30 - legendHeight;
+
+  // Calculate max value across all series
+  let maxValue: number;
+  if (isMultiSeries) {
+    maxValue = Math.max(...ir.series!.flatMap(s => s.values));
+  } else {
+    maxValue = Math.max(...ir.values);
+  }
+
+  const labelCount = ir.labels.length;
+  const groupWidth = chartWidth / labelCount;
+  const barWidth = (groupWidth * 0.7) / seriesCount;
+  const groupPadding = groupWidth * 0.15;
 
   const lines: string[] = [];
 
@@ -63,67 +77,21 @@ export function renderBarChart(ir: PlainVizIR, opts: RenderOptions = {}): string
     lines.push(`  <text x="${width / 2}" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="${textColor}">${escapeXml(ir.title)}</text>`);
   }
 
-  const chartTop = padding;
-  const chartBottom = height - padding;
+  // Legend for multi-series
+  if (isMultiSeries) {
+    const legendY = 45;
+    const legendItemWidth = 80;
+    const legendStartX = (width - ir.series!.length * legendItemWidth) / 2;
 
-  // Y-axis
-  lines.push(`  <line x1="${padding}" y1="${chartTop}" x2="${padding}" y2="${chartBottom}" stroke="${gridColor}" stroke-width="1"/>`);
-
-  // X-axis
-  lines.push(`  <line x1="${padding}" y1="${chartBottom}" x2="${width - padding}" y2="${chartBottom}" stroke="${gridColor}" stroke-width="1"/>`);
-
-  // Grid lines (4 horizontal)
-  for (let i = 1; i <= 4; i++) {
-    const y = chartBottom - (chartHeight / 4) * i;
-    lines.push(`  <line x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}" stroke="${gridColor}" stroke-width="1" stroke-dasharray="3,3"/>`);
-
-    // Y-axis labels
-    const label = Math.round((maxValue / 4) * i);
-    lines.push(`  <text x="${padding - 8}" y="${y + 4}" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${label}</text>`);
+    ir.series!.forEach((series, i) => {
+      const x = legendStartX + i * legendItemWidth;
+      const color = series.color || colors[i % colors.length];
+      lines.push(`  <rect x="${x}" y="${legendY - 8}" width="12" height="12" rx="2" fill="${color}"/>`);
+      lines.push(`  <text x="${x + 16}" y="${legendY}" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${escapeXml(series.name)}</text>`);
+    });
   }
 
-  // Bars
-  ir.values.forEach((value, i) => {
-    const barHeight = (value / maxValue) * chartHeight;
-    const x = padding + (chartWidth / barCount) * i + barGap / 2;
-    const y = chartBottom - barHeight;
-    const color = colors[i % colors.length];
-
-    // Bar
-    lines.push(`  <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="4" fill="${color}"/>`);
-
-    // Value label
-    lines.push(`  <text x="${x + barWidth / 2}" y="${y - 8}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${value}</text>`);
-
-    // X-axis label
-    lines.push(`  <text x="${x + barWidth / 2}" y="${chartBottom + 18}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${escapeXml(ir.labels[i])}</text>`);
-  });
-
-  lines.push('</svg>');
-
-  return lines.join('\n');
-}
-
-export function renderLineChart(ir: PlainVizIR, opts: RenderOptions = {}): string {
-  const options = { ...DEFAULT_OPTIONS, ...opts };
-  const { width, height, padding, colors, backgroundColor, textColor, gridColor } = options;
-
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2 - 30;
-  const maxValue = Math.max(...ir.values);
-  const pointCount = ir.values.length;
-
-  const lines: string[] = [];
-
-  // SVG header
-  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="background-color: ${backgroundColor};">`);
-
-  // Title
-  if (ir.title) {
-    lines.push(`  <text x="${width / 2}" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="${textColor}">${escapeXml(ir.title)}</text>`);
-  }
-
-  const chartTop = padding;
+  const chartTop = padding + legendHeight;
   const chartBottom = height - padding;
 
   // Y-axis
@@ -140,27 +108,146 @@ export function renderLineChart(ir: PlainVizIR, opts: RenderOptions = {}): strin
     lines.push(`  <text x="${padding - 8}" y="${y + 4}" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${label}</text>`);
   }
 
-  // Calculate points
-  const points: { x: number; y: number }[] = ir.values.map((value, i) => ({
-    x: padding + (chartWidth / (pointCount - 1 || 1)) * i,
-    y: chartBottom - (value / maxValue) * chartHeight,
-  }));
+  // Draw bars
+  ir.labels.forEach((label, labelIndex) => {
+    const groupX = padding + groupWidth * labelIndex + groupPadding;
 
-  // Draw line path
-  const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-  lines.push(`  <path d="${pathD}" fill="none" stroke="${colors[0]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`);
+    if (isMultiSeries) {
+      // Multi-series: grouped bars
+      ir.series!.forEach((series, seriesIndex) => {
+        const value = series.values[labelIndex] ?? 0;
+        const barHeight = (value / maxValue) * chartHeight;
+        const x = groupX + seriesIndex * barWidth;
+        const y = chartBottom - barHeight;
+        const color = series.color || colors[seriesIndex % colors.length];
 
-  // Draw points and labels
-  points.forEach((p, i) => {
-    // Point circle
-    lines.push(`  <circle cx="${p.x}" cy="${p.y}" r="5" fill="${colors[0]}" stroke="${backgroundColor}" stroke-width="2"/>`);
+        lines.push(`  <rect x="${x}" y="${y}" width="${barWidth - 2}" height="${barHeight}" rx="2" fill="${color}"/>`);
+      });
+    } else {
+      // Single series
+      const value = ir.values[labelIndex];
+      const barHeight = (value / maxValue) * chartHeight;
+      const x = groupX;
+      const y = chartBottom - barHeight;
+      const color = colors[labelIndex % colors.length];
 
-    // Value label
-    lines.push(`  <text x="${p.x}" y="${p.y - 12}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${ir.values[i]}</text>`);
+      lines.push(`  <rect x="${x}" y="${y}" width="${groupWidth * 0.7}" height="${barHeight}" rx="4" fill="${color}"/>`);
+      lines.push(`  <text x="${x + groupWidth * 0.35}" y="${y - 8}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${value}</text>`);
+    }
 
     // X-axis label
-    lines.push(`  <text x="${p.x}" y="${chartBottom + 18}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${escapeXml(ir.labels[i])}</text>`);
+    const labelX = groupX + (groupWidth * 0.7) / 2;
+    lines.push(`  <text x="${labelX}" y="${chartBottom + 18}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${escapeXml(label)}</text>`);
   });
+
+  lines.push('</svg>');
+
+  return lines.join('\n');
+}
+
+export function renderLineChart(ir: PlainVizIR, opts: RenderOptions = {}): string {
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const { width, height, padding, backgroundColor, textColor, gridColor } = options;
+  const colors = ir.meta?.colors || options.colors;
+
+  const isMultiSeries = ir.series && ir.series.length > 1;
+  const legendHeight = isMultiSeries ? 25 : 0;
+
+  const chartWidth = width - padding * 2;
+  const chartHeight = height - padding * 2 - 30 - legendHeight;
+  const pointCount = ir.labels.length;
+
+  // Calculate max value across all series
+  let maxValue: number;
+  if (isMultiSeries) {
+    maxValue = Math.max(...ir.series!.flatMap(s => s.values));
+  } else {
+    maxValue = Math.max(...ir.values);
+  }
+
+  const lines: string[] = [];
+
+  // SVG header
+  lines.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="background-color: ${backgroundColor};">`);
+
+  // Title
+  if (ir.title) {
+    lines.push(`  <text x="${width / 2}" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="bold" fill="${textColor}">${escapeXml(ir.title)}</text>`);
+  }
+
+  // Legend for multi-series
+  if (isMultiSeries) {
+    const legendY = 45;
+    const legendItemWidth = 80;
+    const legendStartX = (width - ir.series!.length * legendItemWidth) / 2;
+
+    ir.series!.forEach((series, i) => {
+      const x = legendStartX + i * legendItemWidth;
+      const color = series.color || colors[i % colors.length];
+      lines.push(`  <rect x="${x}" y="${legendY - 8}" width="12" height="12" rx="2" fill="${color}"/>`);
+      lines.push(`  <text x="${x + 16}" y="${legendY}" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${escapeXml(series.name)}</text>`);
+    });
+  }
+
+  const chartTop = padding + legendHeight;
+  const chartBottom = height - padding;
+
+  // Y-axis
+  lines.push(`  <line x1="${padding}" y1="${chartTop}" x2="${padding}" y2="${chartBottom}" stroke="${gridColor}" stroke-width="1"/>`);
+
+  // X-axis
+  lines.push(`  <line x1="${padding}" y1="${chartBottom}" x2="${width - padding}" y2="${chartBottom}" stroke="${gridColor}" stroke-width="1"/>`);
+
+  // Grid lines
+  for (let i = 1; i <= 4; i++) {
+    const y = chartBottom - (chartHeight / 4) * i;
+    lines.push(`  <line x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}" stroke="${gridColor}" stroke-width="1" stroke-dasharray="3,3"/>`);
+    const label = Math.round((maxValue / 4) * i);
+    lines.push(`  <text x="${padding - 8}" y="${y + 4}" text-anchor="end" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${label}</text>`);
+  }
+
+  if (isMultiSeries) {
+    // Draw multiple lines
+    ir.series!.forEach((series, seriesIndex) => {
+      const color = series.color || colors[seriesIndex % colors.length];
+      const points = series.values.map((value, i) => ({
+        x: padding + (chartWidth / (pointCount - 1 || 1)) * i,
+        y: chartBottom - (value / maxValue) * chartHeight,
+      }));
+
+      // Draw line path
+      const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+      lines.push(`  <path d="${pathD}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`);
+
+      // Draw points
+      points.forEach((p) => {
+        lines.push(`  <circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}" stroke="${backgroundColor}" stroke-width="2"/>`);
+      });
+    });
+
+    // X-axis labels (only once)
+    ir.labels.forEach((label, i) => {
+      const x = padding + (chartWidth / (pointCount - 1 || 1)) * i;
+      lines.push(`  <text x="${x}" y="${chartBottom + 18}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${escapeXml(label)}</text>`);
+    });
+  } else {
+    // Single series
+    const points = ir.values.map((value, i) => ({
+      x: padding + (chartWidth / (pointCount - 1 || 1)) * i,
+      y: chartBottom - (value / maxValue) * chartHeight,
+    }));
+
+    // Draw line path
+    const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+    lines.push(`  <path d="${pathD}" fill="none" stroke="${colors[0]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`);
+
+    // Draw points and labels
+    points.forEach((p, i) => {
+      lines.push(`  <circle cx="${p.x}" cy="${p.y}" r="5" fill="${colors[0]}" stroke="${backgroundColor}" stroke-width="2"/>`);
+      lines.push(`  <text x="${p.x}" y="${p.y - 12}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="${textColor}">${ir.values[i]}</text>`);
+      lines.push(`  <text x="${p.x}" y="${chartBottom + 18}" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#6c7086">${escapeXml(ir.labels[i])}</text>`);
+    });
+  }
 
   lines.push('</svg>');
 
