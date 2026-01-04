@@ -1,5 +1,6 @@
 {
   "framework": null,
+  "installCommand": "npm install",
   "rewrites": [
     { "source": "/render", "destination": "/api/render" }
   ],
