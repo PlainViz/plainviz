@@ -1,10 +1,16 @@
 import { parse } from '@plainviz/core';
 import { render } from '@plainviz/render-svg';
+import { runGuards, sendError, checkCodeLength } from './_middleware.js';
 
 export default function handler(req: any, res: any) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  // 前置检查: kill switch, 限流, payload 大小
+  if (!runGuards(req, res)) {
+    return;
   }
 
   // Get code from query or body
@@ -16,8 +22,8 @@ export default function handler(req: any, res: any) {
   }
 
   if (!code) {
-    return res.status(400).json({
-      error: 'Missing "code" parameter',
+    return sendError(res, 'MISSING_PARAM', {
+      message: '缺少 "code" 参数',
       example: '/api/render?code=Type:Bar%0AApples:50%0AOranges:30',
     });
   }
@@ -29,12 +35,17 @@ export default function handler(req: any, res: any) {
     // Already decoded
   }
 
+  // 检查代码长度
+  if (!checkCodeLength(code, res)) {
+    return;
+  }
+
   // Parse PlainViz code
   const result = parse(code);
 
   if (!result.ok) {
-    return res.status(400).json({
-      error: 'Parse error',
+    return sendError(res, 'PARSE_ERROR', {
+      message: '代码解析失败，请检查语法',
       errors: result.errors,
     });
   }
@@ -66,9 +77,8 @@ export default function handler(req: any, res: any) {
     res.setHeader('Cache-Control', 'public, max-age=86400');
     return res.status(200).send(svg);
   } catch (error) {
-    return res.status(500).json({
-      error: 'Render error',
-      message: error instanceof Error ? error.message : 'Unknown error',
+    return sendError(res, 'RENDER_ERROR', {
+      message: error instanceof Error ? error.message : '渲染时发生未知错误',
     });
   }
 }
