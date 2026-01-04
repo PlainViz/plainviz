@@ -1,6 +1,5 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
+  "framework": null,
   "rewrites": [
     { "source": "/render", "destination": "/api/render" }
   ],
