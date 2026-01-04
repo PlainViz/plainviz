@@ -30,13 +30,13 @@ importers:
       '@plainviz/render-svg':
         specifier: ^0.2.0
         version: 0.2.0
+      '@vercel/node':
+        specifier: ^5.0.0
+        version: 5.5.16(rollup@4.54.0)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.27
-      '@vercel/node':
-        specifier: ^5.5.16
-        version: 5.5.16(rollup@4.54.0)
       typescript:
         specifier: ^5.7.2
         version: 5.7.3
