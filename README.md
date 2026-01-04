@@ -1,15 +1,8 @@
 # PlainViz
 
-PlainViz is a **plain-text-first data visualization language and toolkit**.
+**Plain-text-first data visualization language and toolkit.**
 
-It lets you describe charts as readable text — and render them programmatically.
-
-**Supports:** Bar, Line, Pie, Area, Donut charts — with multi-series comparison
-**Status:** early stage (APIs and syntax may change)
-
----
-
-## 15-Second Example
+Describe charts as readable text — render them programmatically.
 
 ```plainviz
 Type: Bar
@@ -21,249 +14,89 @@ Mar: 80
 Apr: 60
 ```
 
-**Renders to:**
-
 ![Monthly Sales Bar Chart](./assets/example-bar.svg)
 
----
+## Features
 
-## Multi-Series Comparison
+- **Chart Types:** Bar, Line, Pie, Area, Donut
+- **Multi-series:** Compare multiple data series with comma-separated syntax
+- **Flexible Input:** Supports `$1,200`, `45%`, `1,000,000` formatting
+- **Multiple Ways to Use:** npm packages, Cloud API, Playground, Markdown plugin
 
-Compare multiple data series with a simple comma-separated syntax:
+## Quick Start
 
-```plainviz
-Type: Bar
-Title: Revenue Comparison
-Legend: Alibaba, Tencent
+### Option 1: Playground (No Install)
 
-Revenue: 100, 80
-Profit: 30, 25
-Growth: 15, 12
+Try it online at [plainviz.com](https://plainviz.com)
+
+### Option 2: Cloud API (No Install)
+
+```
+https://api.plainviz.com/api/render?code=Type:Bar%0AApples:50%0AOranges:30
 ```
 
-```plainviz
-Type: Line
-Title: Quarterly Trends
-Legend: 2023, 2024
-
-Q1: 100, 120
-Q2: 110, 140
-Q3: 130, 160
-Q4: 150, 180
-```
-
----
-
-## Installation
+### Option 3: npm Packages
 
 ```bash
-# Core packages
 npm install @plainviz/core @plainviz/render-svg
-
-# For Markdown/Remark integration
-npm install remark-plainviz
 ```
-
----
-
-## Usage
-
-### JavaScript / TypeScript
 
 ```ts
 import { parse } from '@plainviz/core';
 import { render } from '@plainviz/render-svg';
 
-const input = `
+const result = parse(`
 Type: Bar
 Title: Sales
 
 Q1: 100
 Q2: 200
-Q3: 150
-`;
-
-const result = parse(input);
+`);
 
 if (result.ok) {
   const svg = render(result.ir);
-  console.log(svg); // SVG string
 }
 ```
 
-### CLI
+## Documentation
 
-```bash
-# Clone the repo, then:
-node --import tsx scripts/render-svg.mjs examples/01-basic.pv > chart.svg
-```
-
-### Markdown (Remark Plugin)
-
-```js
-import { remark } from 'remark';
-import remarkHtml from 'remark-html';
-import remarkPlainViz from 'remark-plainviz';
-
-const markdown = `
-# Report
-
-\`\`\`plainviz
-Type: Bar
-Title: Q1 Results
-
-Product A: 500
-Product B: 750
-\`\`\`
-`;
-
-const result = await remark()
-  .use(remarkPlainViz)
-  .use(remarkHtml)
-  .process(markdown);
-
-// plainviz code blocks are replaced with SVG charts
-```
-
----
-
-## Syntax
-
-### Single Series
-
-```plainviz
-Type: Bar              # Chart type: bar, line, pie, area, donut
-Title: "Chart Title"   # Optional title
-Subtitle: "Subtitle"   # Optional subtitle
-
-# Data (label: value)
-Product A: 500
-Product B: $1,200      # $ and commas are auto-cleaned
-Product C: 45%         # % is auto-cleaned
-```
-
-### Multi-Series
-
-```plainviz
-Type: Bar
-Title: Company Comparison
-Legend: Company A, Company B    # Define series names
-
-Revenue: 100, 80                # Values separated by comma
-Profit: 30, 25
-Growth: 15%, 12%
-```
-
-**Features:**
-- `Legend:` defines series names (defaults to "Series 1, Series 2" if omitted)
-- Supports both English `,` and Chinese `，` commas
-- Number formatting preserved (`$1,200` won't be split)
-
----
+| Document | Description |
+|----------|-------------|
+| [Getting Started](./docs/getting-started.md) | Quick start guide |
+| [Syntax Reference](./docs/syntax.md) | Complete syntax guide |
+| [Chart Types](./docs/chart-types.md) | All chart types explained |
+| [Playground Guide](./docs/playground.md) | Web editor usage |
+| [@plainviz/core](./docs/packages/core.md) | Core parser API |
+| [@plainviz/render-svg](./docs/packages/render-svg.md) | SVG renderer API |
+| [Remark Plugin](./docs/integrations/remark.md) | Markdown integration |
+| [Cloud API](./docs/cloud-api.md) | HTTP API reference |
+| [Examples](./docs/examples.md) | More examples |
 
 ## Packages
 
-| Package | Description |
-|---------|-------------|
-| [`@plainviz/core`](https://www.npmjs.com/package/@plainviz/core) | Parser and IR types |
-| [`@plainviz/render-svg`](https://www.npmjs.com/package/@plainviz/render-svg) | SVG renderer |
-| [`remark-plainviz`](https://www.npmjs.com/package/remark-plainviz) | Remark plugin for Markdown |
-
----
-
-## Cloud API
-
-PlainViz provides a free cloud API for rendering charts without installing any packages.
-
-### Endpoint
-
-```
-GET https://api.plainviz.com/api/render
-```
-
-### Parameters
-
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `code` | Yes | - | PlainViz code (URL encoded) |
-| `width` | No | 500 | Chart width in pixels |
-| `height` | No | 300 | Chart height in pixels |
-| `theme` | No | dark | Color theme: `dark` or `light` |
-| `format` | No | svg | Response format: `svg` or `json` |
-
-### Examples
-
-**Simple bar chart:**
-```
-https://api.plainviz.com/api/render?code=Type:Bar%0AApples:50%0AOranges:30
-```
-
-**With options:**
-```
-https://api.plainviz.com/api/render?code=Type:Pie%0AA:40%0AB:60&theme=light&width=400
-```
-
-**Embed in HTML:**
-```html
-<img src="https://api.plainviz.com/api/render?code=Type:Bar%0ASales:100%0ACosts:60" alt="Chart" />
-```
-
-**Use in Markdown:**
-```markdown
-![Chart](https://api.plainviz.com/api/render?code=Type:Bar%0AQ1:100%0AQ2:150)
-```
-
-### API Info
-
-```
-GET https://api.plainviz.com/api
-```
-
-Returns API documentation and available endpoints.
-
----
-
-## Project Structure
-
-```
-plainviz/
-├── packages/
-│   ├── core/           # @plainviz/core
-│   ├── render-svg/     # @plainviz/render-svg
-│   └── remark-plainviz/
-├── apps/
-│   ├── playground/     # Web playground (Vite + React)
-│   └── api/            # Cloud API (Vercel)
-├── examples/           # .pv example files
-└── scripts/            # CLI tools
-```
-
----
+| Package | Version | Description |
+|---------|---------|-------------|
+| [@plainviz/core](https://www.npmjs.com/package/@plainviz/core) | 0.2.0 | Parser and IR types |
+| [@plainviz/render-svg](https://www.npmjs.com/package/@plainviz/render-svg) | 0.2.0 | SVG renderer |
+| [remark-plainviz](https://www.npmjs.com/package/remark-plainviz) | 0.1.1 | Remark plugin |
 
 ## Why Plain Text?
 
-* Works naturally with **Git and diff**
-* Easy to **read, write, and review**
-* Survives copy/paste, chat tools, and documentation
-* Makes **visual intent explicit**, not hidden in UI state
-
----
+- Works naturally with **Git and diff**
+- Easy to **read, write, and review**
+- Survives copy/paste, chat tools, and documentation
+- Makes **visual intent explicit**, not hidden in UI state
 
 ## Links
 
-* npm: [@plainviz/core](https://www.npmjs.com/package/@plainviz/core)
-* GitHub: [github.com/nicekate/plainviz](https://github.com/plainviz/plainviz)
-* Website: [plainviz.com](https://plainviz.com)
-* API: [api.plainviz.com](https://api.plainviz.com/api)
-
----
+- Website: [plainviz.com](https://plainviz.com)
+- API: [api.plainviz.com](https://api.plainviz.com/api)
+- npm: [@plainviz/core](https://www.npmjs.com/package/@plainviz/core)
+- GitHub: [github.com/nicekate/plainviz](https://github.com/nicekate/plainviz)
 
 ## Contributing
 
-* Issues and conceptual discussions are welcome
-* Feedback on syntax and mental models is especially useful
-
----
+Issues and conceptual discussions are welcome. Feedback on syntax and mental models is especially useful.
 
 ## License
 
