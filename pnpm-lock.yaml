@@ -99,8 +99,8 @@ importers:
   packages/render-svg:
     dependencies:
       '@plainviz/core':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^0.2.0
+        version: 0.2.0
     devDependencies:
       typescript:
         specifier: ^5.7.2
@@ -379,6 +379,9 @@ packages:
 
   '@plainviz/core@0.1.0':
     resolution: {integrity: sha512-TN0EEpZ1SxBRaKcd+UExJ2WqZvtkGjuVCAmCgQoj6PhHgBbMmisjmytpY4dfzEZUI3M6C4MeF4bO7S790RFXFg==}
+
+  '@plainviz/core@0.2.0':
+    resolution: {integrity: sha512-ET6u1MKdPwxSOKcb7HQPI8d3gvQ802VqjZXw1cmFVbgQKYYxYa8kZcaR3A8HsPV7HXL/6mAy35sDCgZct8MrVA==}
 
   '@plainviz/render-svg@0.1.0':
     resolution: {integrity: sha512-5x4UGHjj6SHR2U0dtTadfKI6R7qlJ/FhKxfgYWjA2UdGoUQr/CxU1wlhLoRcCxUp7jRPQf12VIXqEw05RBKQEA==}
@@ -1631,6 +1634,8 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
 
   '@plainviz/core@0.1.0': {}
+
+  '@plainviz/core@0.2.0': {}
 
   '@plainviz/render-svg@0.1.0':
     dependencies:
