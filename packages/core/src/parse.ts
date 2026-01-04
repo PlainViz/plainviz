@@ -49,7 +49,22 @@ export function parse(input: string): ParseResult {
     // Find colon separator
     const colonIndex = trimmed.indexOf(':');
     if (colonIndex === -1) {
-      errors.push({ line: lineNum, message: `Missing ':' separator` });
+      // Check for common mistakes
+      if (trimmed.includes('=')) {
+        errors.push({
+          line: lineNum,
+          message: `Use ':' instead of '='`,
+          hint: `Try: ${trimmed.replace('=', ':')}`,
+          source: trimmed,
+        });
+      } else {
+        errors.push({
+          line: lineNum,
+          message: `Missing ':' separator`,
+          hint: `Each line should be "Label: Value", e.g., "Sales: 100"`,
+          source: trimmed,
+        });
+      }
       continue;
     }
 
@@ -57,7 +72,22 @@ export function parse(input: string): ParseResult {
     const value = trimmed.slice(colonIndex + 1).trim();
 
     if (!key) {
-      errors.push({ line: lineNum, message: `Empty key before ':'` });
+      errors.push({
+        line: lineNum,
+        message: `Empty label before ':'`,
+        hint: `Add a label name, e.g., "Product A: 50"`,
+        source: trimmed,
+      });
+      continue;
+    }
+
+    if (!value) {
+      errors.push({
+        line: lineNum,
+        message: `Missing value after ':'`,
+        hint: `Add a number value, e.g., "${key}: 100"`,
+        source: trimmed,
+      });
       continue;
     }
 
@@ -72,9 +102,15 @@ export function parse(input: string): ParseResult {
           if (validTypes.includes(typeLower)) {
             type = typeLower as ChartType;
           } else {
+            // Find closest match for suggestion
+            const suggestion = validTypes.find(t =>
+              t.startsWith(typeLower.charAt(0)) || typeLower.includes(t.charAt(0))
+            ) || 'bar';
             errors.push({
               line: lineNum,
-              message: `Invalid chart type '${value}'. Valid types: ${validTypes.join(', ')}`
+              message: `Unknown chart type "${value}"`,
+              hint: `Valid types: bar, line, pie, area. Did you mean "${suggestion}"?`,
+              source: trimmed,
             });
           }
           break;
@@ -104,7 +140,9 @@ export function parse(input: string): ParseResult {
       if (isNaN(numValue)) {
         errors.push({
           line: lineNum,
-          message: `Invalid number '${value}' for label '${key}'`
+          message: `"${value}" is not a valid number`,
+          hint: `Use a number like: ${key}: 100 (supports $, %, commas)`,
+          source: trimmed,
         });
         continue;
       }
@@ -116,7 +154,11 @@ export function parse(input: string): ParseResult {
 
   // Validation
   if (labels.length === 0 && errors.length === 0) {
-    errors.push({ line: 0, message: 'No data points found' });
+    errors.push({
+      line: 0,
+      message: 'No data points found',
+      hint: `Add data like:\nApples: 50\nOranges: 30\nBananas: 45`,
+    });
   }
 
   if (errors.length > 0) {

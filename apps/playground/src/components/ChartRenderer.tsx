@@ -36,14 +36,33 @@ interface ChartRendererProps {
 export function ChartRenderer({ result }: ChartRendererProps) {
   if (!result.ok) {
     return (
-      <div className="flex items-center justify-center h-full text-gray-500">
-        <div className="text-center">
-          <p className="text-lg text-red-400">Parse Errors:</p>
-          <ul className="text-sm mt-2 text-gray-400">
+      <div className="flex items-center justify-center h-full text-gray-500 p-4">
+        <div className="w-full max-w-md">
+          <p className="text-lg text-red-400 mb-4">Oops! Let's fix that:</p>
+          <div className="space-y-3">
             {result.errors.map((err, i) => (
-              <li key={i}>Line {err.line}: {err.message}</li>
+              <div key={i} className="bg-[#313244] rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <span className="text-red-400 text-sm font-mono">
+                    {err.line > 0 ? `L${err.line}` : ''}
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-[#f38ba8] font-medium">{err.message}</p>
+                    {err.source && (
+                      <p className="text-[#6c7086] font-mono text-sm mt-1 bg-[#1e1e2e] px-2 py-1 rounded">
+                        {err.source}
+                      </p>
+                    )}
+                    {err.hint && (
+                      <p className="text-[#a6e3a1] text-sm mt-2 whitespace-pre-wrap">
+                        💡 {err.hint}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     );

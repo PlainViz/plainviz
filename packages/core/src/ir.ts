@@ -22,6 +22,8 @@ export interface PlainVizIR {
 export interface ParseError {
   line: number;
   message: string;
+  hint?: string;
+  source?: string;
 }
 
 export type ParseResult =

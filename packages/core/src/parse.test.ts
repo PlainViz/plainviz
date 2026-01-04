@@ -114,7 +114,8 @@ A: abc
 `);
       expect(result.ok).toBe(false);
       if (!result.ok) {
-        expect(result.errors[0].message).toContain("Invalid number");
+        expect(result.errors[0].message).toContain("not a valid number");
+        expect(result.errors[0].hint).toBeDefined();
       }
     });
 
@@ -125,7 +126,8 @@ A: 10
 `);
       expect(result.ok).toBe(false);
       if (!result.ok) {
-        expect(result.errors[0].message).toContain("Invalid chart type");
+        expect(result.errors[0].message).toContain("Unknown chart type");
+        expect(result.errors[0].hint).toContain("Valid types");
       }
     });
 
